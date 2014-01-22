@@ -1,195 +1,186 @@
+
 package com.mapsaurus.paneslayout;
 
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
 
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.view.MenuItem;
-import com.mapsaurus.panelayout.R;
-
-import android.app.SearchManager;
-import android.content.Intent;
 import android.content.res.Configuration;
-import android.content.res.Resources;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.FragmentManager.OnBackStackChangedListener;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.util.Log;
-import android.view.ActionProvider;
-import android.view.SubMenu;
+import android.view.MenuItem;
 import android.view.View;
-import android.view.ContextMenu.ContextMenuInfo;
-import android.view.MenuItem.OnActionExpandListener;
-import android.view.MenuItem.OnMenuItemClickListener;
-import android.widget.FrameLayout;
-import android.widget.Toast;
+
+import com.mapsaurus.panelayout.R;
 
 public class PhoneDelegate extends ActivityDelegate implements OnBackStackChangedListener {
 
-	private ActionBarDrawerToggle drawerToggle;
-	private DrawerLayout drawer;
+    private ActionBarDrawerToggle drawerToggle;
+    private DrawerLayout drawer;
 
-	public PhoneDelegate(PanesActivity a) {
-		super(a);
-	}
+    public PhoneDelegate(PanesActivity a) {
+        super(a);
+    }
 
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		if (findViewById(R.id.content_frame) == null)
-			setContentView(R.layout.phone_layout);
-		
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		getSupportActionBar().setHomeButtonEnabled(true);
-		
-		drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-		drawer.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
-		
-		drawerToggle = new ActionBarDrawerToggle(
-				getActivity(), drawer, R.drawable.ic_drawer,
-				R.string.drawer_open, R.string.drawer_close) {
-			public void onDrawerClosed(View view) {
-				supportInvalidateOptionsMenu();
-				// creates call to onPrepareOptionsMenu()
-			}
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        if (findViewById(R.id.content_frame) == null)
+            setContentView(R.layout.phone_layout);
 
-			public void onDrawerOpened(View drawerView) {
-				supportInvalidateOptionsMenu();
-				// creates call to onPrepareOptionsMenu()
-			}
-		};
-		drawer.setDrawerListener(drawerToggle);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
 
-		FragmentManager fm = getSupportFragmentManager();
-		fm.addOnBackStackChangedListener(this);
-	}
+        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
 
-	/**
-	 * When using the ActionBarDrawerToggle, you must call it during
-	 * onPostCreate() and onConfigurationChanged()...
-	 */
+        drawerToggle = new ActionBarDrawerToggle(
+                getActivity(), drawer, R.drawable.ic_drawer,
+                R.string.drawer_open, R.string.drawer_close) {
+            public void onDrawerClosed(View view) {
+                supportInvalidateOptionsMenu();
+                // creates call to onPrepareOptionsMenu()
+            }
 
-	@Override
-	protected void onPostCreate(Bundle savedInstanceState) {
-		// Sync the toggle state after onRestoreInstanceState has occurred.
-		drawerToggle.syncState();
-	}
+            public void onDrawerOpened(View drawerView) {
+                supportInvalidateOptionsMenu();
+                // creates call to onPrepareOptionsMenu()
+            }
+        };
+        drawer.setDrawerListener(drawerToggle);
 
-	@Override
-	public void onConfigurationChanged(Configuration newConfig) {
-		// Pass any configuration change to the drawer toggles
-		drawerToggle.onConfigurationChanged(newConfig);
-	}
+        FragmentManager fm = getSupportFragmentManager();
+        fm.addOnBackStackChangedListener(this);
+    }
 
-	/* *********************************************************************
-	 * Interactions with menu/back/etc
-	 * ********************************************************************* */
+    /**
+     * When using the ActionBarDrawerToggle, you must call it during
+     * onPostCreate() and onConfigurationChanged()...
+     */
 
-	@Override
-	public boolean onBackPressed() {
-		return false;
-	}
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        // Sync the toggle state after onRestoreInstanceState has occurred.
+        drawerToggle.syncState();
+    }
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		if (item.getItemId() == android.R.id.home) {
-			// drawer enabled
-			if (drawerToggle.isDrawerIndicatorEnabled()) {
-				// The action bar home/up action should open or close the drawer.
-				// ActionBarDrawerToggle will take care of this.
-				if (drawerToggle.onOptionsItemSelected(new MenuItemWrapper(item))) 
-					return true;
-			} else {
-				clearFragments();
-				return true;
-			}
-		}
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        // Pass any configuration change to the drawer toggles
+        drawerToggle.onConfigurationChanged(newConfig);
+    }
 
-		return false;
-	}
-	
-	@Override
-	public void onBackStackChanged() {
-		FragmentManager fm = getSupportFragmentManager();
-		int count = fm.getBackStackEntryCount();
-		if (count > 0)
-			drawerToggle.setDrawerIndicatorEnabled(false);
-		else
-			drawerToggle.setDrawerIndicatorEnabled(true);
-	}
+    /* *********************************************************************
+     * Interactions with menu/back/etc
+     * *********************************************************************
+     */
 
-	/* *********************************************************************
-	 * Adding, removing, getting fragments
-	 * ********************************************************************* */
+    @Override
+    public boolean onBackPressed() {
+        return false;
+    }
 
-	/**
-	 * Save the menu fragment. The reason to do this is because sometimes when
-	 * we need to retrieve a fragment, that fragment has not yet been added.
-	 */
-	private WeakReference<Fragment> wMenuFragment = new WeakReference<Fragment>(null);
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            // drawer enabled
+            if (drawerToggle.isDrawerIndicatorEnabled()) {
+                // The action bar home/up action should open or close the
+                // drawer.
+                // ActionBarDrawerToggle will take care of this.
+                if (drawerToggle.onOptionsItemSelected(new MenuItemWrapper(item)))
+                    return true;
+            } else {
+                clearFragments();
+                return true;
+            }
+        }
 
-	@Override
-	public void addFragment(Fragment prevFragment, Fragment newFragment) {
-		boolean addToBackStack = false;
-		if (prevFragment == getMenuFragment() || prevFragment == null) {
-			clearFragments();
-		} else {
-			addToBackStack = true;
-		}
+        return false;
+    }
 
-		drawer.closeDrawer(GravityCompat.START);
+    @Override
+    public void onBackStackChanged() {
+        FragmentManager fm = getSupportFragmentManager();
+        int count = fm.getBackStackEntryCount();
+        if (count > 0)
+            drawerToggle.setDrawerIndicatorEnabled(false);
+        else
+            drawerToggle.setDrawerIndicatorEnabled(true);
+    }
 
-		if (newFragment != null) {
-			FragmentManager fm = getSupportFragmentManager();
-			FragmentTransaction ft = fm.beginTransaction();
-			ft.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out,
-					android.R.anim.fade_in, android.R.anim.fade_out);
-			ft.replace(R.id.content_frame, newFragment);
-			if (addToBackStack) ft.addToBackStack(newFragment.toString());
-			ft.commit();
-		}
-	}
+    /* *********************************************************************
+     * Adding, removing, getting fragments
+     * *********************************************************************
+     */
 
-	@Override
-	public void clearFragments() {
-		FragmentManager fm = getSupportFragmentManager();
-		for(int i = 0; i < fm.getBackStackEntryCount(); i ++)    
-			fm.popBackStack();
-	}
+    /**
+     * Save the menu fragment. The reason to do this is because sometimes when
+     * we need to retrieve a fragment, that fragment has not yet been added.
+     */
+    private WeakReference<Fragment> wMenuFragment = new WeakReference<Fragment>(null);
 
-	@Override
-	public void setMenuFragment(Fragment f) {
-		FragmentManager fm = getSupportFragmentManager();
-		FragmentTransaction ft = fm.beginTransaction();
-		ft.replace(R.id.menu_frame, f);
-		ft.commit();
+    @Override
+    public void addFragment(Fragment prevFragment, Fragment newFragment) {
+        boolean addToBackStack = false;
+        if (prevFragment == getMenuFragment() || prevFragment == null) {
+            clearFragments();
+        } else {
+            addToBackStack = true;
+        }
 
-		wMenuFragment = new WeakReference<Fragment>(f);
-	}
+        drawer.closeDrawer(GravityCompat.START);
 
-	@Override
-	public Fragment getMenuFragment() {
-		Fragment f = wMenuFragment.get();
-		if (f == null) {
-			f = getSupportFragmentManager().findFragmentById(R.id.menu_frame);
-			wMenuFragment = new WeakReference<Fragment>(f);
-		}
-		return f;
-	}
+        if (newFragment != null) {
+            FragmentManager fm = getSupportFragmentManager();
+            FragmentTransaction ft = fm.beginTransaction();
+            ft.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out,
+                    android.R.anim.fade_in, android.R.anim.fade_out);
+            ft.replace(R.id.content_frame, newFragment);
+            if (addToBackStack)
+                ft.addToBackStack(newFragment.toString());
+            ft.commit();
+        }
+    }
 
-	@Override
-	public Fragment getTopFragment() {
-		return getSupportFragmentManager().findFragmentById(R.id.content_frame);
-	}
+    @Override
+    public void clearFragments() {
+        FragmentManager fm = getSupportFragmentManager();
+        for (int i = 0; i < fm.getBackStackEntryCount(); i++)
+            fm.popBackStack();
+    }
 
-	@Override
-	public void showMenu() {
-		drawer.openDrawer(GravityCompat.START);
-	}
+    @Override
+    public void setMenuFragment(Fragment f) {
+        FragmentManager fm = getSupportFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
+        ft.replace(R.id.menu_frame, f);
+        ft.commit();
+
+        wMenuFragment = new WeakReference<Fragment>(f);
+    }
+
+    @Override
+    public Fragment getMenuFragment() {
+        Fragment f = wMenuFragment.get();
+        if (f == null) {
+            f = getSupportFragmentManager().findFragmentById(R.id.menu_frame);
+            wMenuFragment = new WeakReference<Fragment>(f);
+        }
+        return f;
+    }
+
+    @Override
+    public Fragment getTopFragment() {
+        return getSupportFragmentManager().findFragmentById(R.id.content_frame);
+    }
+
+    @Override
+    public void showMenu() {
+        drawer.openDrawer(GravityCompat.START);
+    }
 
 }

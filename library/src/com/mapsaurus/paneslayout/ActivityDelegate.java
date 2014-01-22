@@ -1,119 +1,127 @@
-package com.mapsaurus.paneslayout;
 
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.view.MenuItem;
+package com.mapsaurus.paneslayout;
 
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.ActionBar;
+import android.view.MenuItem;
 import android.view.View;
 
 public abstract class ActivityDelegate {
 
-	private PanesActivity mActivity;
+    private PanesActivity mActivity;
 
-	public ActivityDelegate(PanesActivity a) {
-		mActivity = a;
-	}
+    public ActivityDelegate(PanesActivity a) {
+        mActivity = a;
+    }
 
-	/**
-	 * Save the state of the panes 
-	 */
-	public void onSaveInstanceState(Bundle savedInstanceState) {}
+    /**
+     * Save the state of the panes
+     */
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+    }
 
-	/**
-	 * onCreate
-	 */
-	public abstract void onCreate(Bundle savedInstanceState);
+    /**
+     * onCreate
+     */
+    public abstract void onCreate(Bundle savedInstanceState);
 
-	/**
-	 * onDestroy
-	 */
-	public void onDestroy() {}
+    /**
+     * onDestroy
+     */
+    public void onDestroy() {
+    }
 
-	protected void onPostCreate(Bundle savedInstanceState) {}
-	protected void onConfigurationChanged(Configuration newConfig) {}
+    protected void onPostCreate(Bundle savedInstanceState) {
+    }
 
-	/* *********************************************************************
-	 * Adding, removing, getting fragments
-	 * ********************************************************************* */
+    protected void onConfigurationChanged(Configuration newConfig) {
+    }
 
-	/**
-	 * Add a fragment as a menu
-	 */
-	public abstract void addFragment(Fragment prevFragment, Fragment newFragment);
+    /* *********************************************************************
+     * Adding, removing, getting fragments
+     * *********************************************************************
+     */
 
-	/**
-	 * Add a fragment as a menu
-	 */
-	public abstract void setMenuFragment(Fragment f);
+    /**
+     * Add a fragment as a menu
+     */
+    public abstract void addFragment(Fragment prevFragment, Fragment newFragment);
 
-	/**
-	 * Clear all fragments from stack
-	 */
-	public abstract void clearFragments();
+    /**
+     * Add a fragment as a menu
+     */
+    public abstract void setMenuFragment(Fragment f);
 
-	/**
-	 * Get menu framgent
-	 */
-	public abstract Fragment getMenuFragment();
+    /**
+     * Clear all fragments from stack
+     */
+    public abstract void clearFragments();
 
-	/**
-	 * Get top framgent
-	 */
-	public abstract Fragment getTopFragment();
+    /**
+     * Get menu framgent
+     */
+    public abstract Fragment getMenuFragment();
 
-	/**
-	 * Show the menu
-	 */
-	public abstract void showMenu();
+    /**
+     * Get top framgent
+     */
+    public abstract Fragment getTopFragment();
 
-	/* *********************************************************************
-	 * Deal with over-riding activity methods
-	 * ********************************************************************* */
+    /**
+     * Show the menu
+     */
+    public abstract void showMenu();
 
-	/**
-	 * Deal with back pressed
-	 */
-	public abstract boolean onBackPressed();
+    /* *********************************************************************
+     * Deal with over-riding activity methods
+     * *********************************************************************
+     */
 
-	/**
-	 * Deal with menu buttons
-	 */
-	public abstract boolean onOptionsItemSelected(MenuItem item);
+    /**
+     * Deal with back pressed
+     */
+    public abstract boolean onBackPressed();
 
-	/* *********************************************************************
-	 * Wrapper functions to make coding a delegate less annoying
-	 * ********************************************************************* */
+    /**
+     * Deal with menu buttons
+     */
+    public abstract boolean onOptionsItemSelected(MenuItem item);
 
-	protected final void supportInvalidateOptionsMenu() {
-		mActivity.supportInvalidateOptionsMenu();
-	}
+    /* *********************************************************************
+     * Wrapper functions to make coding a delegate less annoying
+     * *********************************************************************
+     */
 
-	protected final PanesActivity getActivity() {
-		return mActivity;
-	}
+    protected final void supportInvalidateOptionsMenu() {
+        mActivity.supportInvalidateOptionsMenu();
+    }
 
-	protected final void setContentView(int layoutResId) {
-		mActivity.setContentView(layoutResId);
-	}
+    protected final PanesActivity getActivity() {
+        return mActivity;
+    }
 
-	protected final ActionBar getSupportActionBar() {
-		return mActivity.getSupportActionBar();
-	}
+    protected final void setContentView(int layoutResId) {
+        mActivity.setContentView(layoutResId);
+    }
 
-	protected final Resources getResources() {
-		return mActivity.getResources();
-	}
+    protected final ActionBar getSupportActionBar() {
+        return mActivity.getSupportActionBar();
+    }
 
-	protected final FragmentManager getSupportFragmentManager() {
-		return mActivity.getSupportFragmentManager();
-	}
+    protected final Resources getResources() {
+        return mActivity.getResources();
+    }
 
-	protected final View findViewById(int id) {
-		return mActivity.findViewById(id);
-	}
+    protected final FragmentManager getSupportFragmentManager() {
+        return mActivity.getSupportFragmentManager();
+    }
+
+    protected final View findViewById(int id) {
+        return mActivity.findViewById(id);
+    }
 
 }
